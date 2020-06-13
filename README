@@ -12,3 +12,7 @@ To deploy app to Heroku:
 
 To take app offline: 
 Heroku -> Settings -> Maintanence Mode -> Turn on
+
+
+For more info, see:
+https://devcenter.heroku.com/articles/deploying-nodejs
