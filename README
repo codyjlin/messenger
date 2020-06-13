@@ -1,1 +1,14 @@
-Empty Read me for now
+
+To deploy locally:
+- npm install
+- heroku local web
+
+Your app should now be running on http://localhost:5000/
+
+To deploy app to Heroku:
+- heroku login
+- heroku create
+- git push heroku master
+
+To take app offline: 
+Heroku -> Settings -> Maintanence Mode -> Turn on
