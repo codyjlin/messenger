@@ -30,7 +30,13 @@ let token =
 
 app.post("/webhook", (req, res) => {
   console.log("----------- post webhook ---------------");
-  console.log(req.body.entry[0]);
+  console.log("req.body.entry[0].messaging[0]", req.body.entry[0].messaging[0]);
+  console.log(
+    "req.body.entry[0].messaging[0].message",
+    req.body.entry[0].messaging[0].message
+  );
+
+  console.log(req.body.entry[0].messaging[0].message);
   console.log("---------------- end post webhook ----------");
   let messaging_events = req.body.entry[0].messaging;
   for (let i = 0; i < messaging_events.length; i++) {
