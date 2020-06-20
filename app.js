@@ -35,7 +35,19 @@ app.post("/webhook", (req, res) => {
 });
 
 sendText = (sender, text) => {
-  let messageData = { text: text };
+  let messageData = { text: text, "quick_replies":[
+    {
+      "content_type":"text",
+      "title":"Red",
+      // "payload":"<POSTBACK_PAYLOAD>",
+      "image_url":"https://media1.s-nbcnews.com/i/newscms/2016_14/1038571/red-dot-puzzle-tease-today-160406_7042d4e863c03b4a32720f424d48501b.JPG"
+    },{
+      "content_type":"text",
+      "title":"Yellow",
+      // "payload":"<POSTBACK_PAYLOAD>",
+      "image_url":"https://newyork.cbslocal.com/wp-content/uploads/sites/14578484/2011/12/yellowdot_420_1.jpg?w=420&h=316&crop=1"
+    }
+  ] };
   request({
     url: "https://graph.facebook.com/v2.6/me/messages",
     qs: { access_token: token },
