@@ -24,6 +24,23 @@ res.send("Wrong token");
 let token =
   "EAAEAaBJDBFQBALdr7koRDeS7MMcPvLnUZBuwFMuJ0GNx1jb9cCyQyVHUSX1nbJaMjF3uNpZA71TxegrbvhfQwC29ZAKAmRqJlBUYJtNlZAQwkNTWR91ZAtpBzDWCGgQrOOBZAaxye4mjox6lfw2cgBeJmbQGCRs71HlQW9rrpdlet4dFav7O1f7S2MRnQI8BoZD";
 
+let actQuickReplies = [
+  {
+    content_type: "text",
+    title: "How to get involved",
+    payload: "getInvolved",
+    image_url:
+      "https://media1.s-nbcnews.com/i/newscms/2016_14/1038571/red-dot-puzzle-tease-today-160406_7042d4e863c03b4a32720f424d48501b.JPG",
+  },
+  {
+    content_type: "text",
+    title: "Add an opportunity",
+    payload: "addOpportunity",
+    image_url:
+      "https://newyork.cbslocal.com/wp-content/uploads/sites/14578484/2011/12/yellowdot_420_1.jpg?w=420&h=316&crop=1",
+  },
+];
+
 app.post("/webhook", (req, res) => {
   console.log("----------- post webhook ---------------");
   // console.log("Printing req.body: ", req.body);
@@ -47,7 +64,11 @@ app.post("/webhook", (req, res) => {
     let sender = event.sender.id;
     if (event.message && event.message.text) {
       let text = event.message.text;
-      sendText(sender, "Echo of: " + text.substring(0, 100));
+
+      sendText(sender, {
+        text: "Echo of: " + text.substring(0, 100),
+        quick_replies: actQuickReplies,
+      });
       askForZipcode(sender);
 
       if (event.message.quick_reply) {
@@ -55,11 +76,11 @@ app.post("/webhook", (req, res) => {
 
         switch (quickReply) {
           case "getInvolved": {
-            sendText(sender, "you clicked get involved");
+            sendText(sender, { text: "you clicked get involved" });
             break;
           }
           case "addOpportunity": {
-            sendText(sender, "you clicked add opportunity");
+            sendText(sender, { text: "you clicked add opportunity" });
             break;
           }
         }
@@ -71,28 +92,28 @@ app.post("/webhook", (req, res) => {
 });
 
 askForZipcode = (sender) => {
-    console.log("ASKING FOR ZIPCODE");
-    let messageData = {
-        text: "What is your zipcode?",
-    };
-    request({
-        url: "https://graph.facebook.com/v7.0/me/messages",
-        qs: { access_token: token },
-        method: "POST",
-        json: {
-            messaging_type: "UPDATE",
-            recipient: { id: sender },
-            message: messageData,
-        },
-    }),
+  console.log("ASKING FOR ZIPCODE");
+  let messageData = {
+    text: "What is your zipcode?",
+  };
+  request({
+    url: "https://graph.facebook.com/v7.0/me/messages",
+    qs: { access_token: token },
+    method: "POST",
+    json: {
+      messaging_type: "UPDATE",
+      recipient: { id: sender },
+      message: messageData,
+    },
+  }),
     (error, response, body) => {
-        if (error) {
+      if (error) {
         console.log("error");
-        } else if (response.body.error) {
+      } else if (response.body.error) {
         console.log("response body error");
-        }
+      }
     };
-}
+};
 
 sendText = (sender, text) => {
   console.log("SENDING TEXT");
@@ -130,9 +151,9 @@ sendText = (sender, text) => {
       } else if (response.body.error) {
         console.log("response body error");
       }
-      console.log("**** RESPONSE START ******")
-      console.log(response)
-      console.log("**** RESPONSE END ******")
+      console.log("**** RESPONSE START ******");
+      console.log(response);
+      console.log("**** RESPONSE END ******");
     };
 };
 
