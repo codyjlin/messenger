@@ -9,20 +9,25 @@ app.set("port", process.env.PORT || 5000);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// to test web interface at https://hidden-reaches-75568.herokuapp.com/
 app.get("/", (req, res) => res.send("Hi I am a chatbot."));
 
-// app.get("/webhook/", (req, res) => {
-//   if (req.query["hub.verify_token"] === "cacheRegister112358") {
-//     res.send(req.query["hub.challenge"]);
-//   }
-//   res.send("Wrong token");
-// });
+/* ONLY NEEDED ONCE FOR SETUP TO CONNECT APP CODE TO FB
+app.get("/webhook/", (req, res) => {
+if (req.query["hub.verify_token"] === "cacheRegister112358") {
+    res.send(req.query["hub.challenge"]);
+}
+res.send("Wrong token");
+});
+*/
 
 let token =
   "EAAEAaBJDBFQBALdr7koRDeS7MMcPvLnUZBuwFMuJ0GNx1jb9cCyQyVHUSX1nbJaMjF3uNpZA71TxegrbvhfQwC29ZAKAmRqJlBUYJtNlZAQwkNTWR91ZAtpBzDWCGgQrOOBZAaxye4mjox6lfw2cgBeJmbQGCRs71HlQW9rrpdlet4dFav7O1f7S2MRnQI8BoZD";
 
 app.post("/webhook", (req, res) => {
   console.log("----------- post webhook ---------------");
+  console.log("Printing req.body: ", req.body);
+  console.log("Printing req.body.entry: ", req.body.entry);
   console.log(
     "Printing req.body.entry[0].messaging: ",
     req.body.entry[0].messaging
