@@ -12,7 +12,13 @@ app.use(bodyParser.json());
 app.get("/", (req, res) => res.send("Hi I am a chatbot."));
 
 app.get("/webhook/", (req, res) => {
+    console.log("------------- get webhook --------------");
+    console.log("request is ")
     console.log(req);
+    console.log("----------------------------");
+    console.log(res);
+    console.log("--------------- end webhook -----------");
+
 
   if (req.query["hub.verify_token"] === "cacheRegister112358") {
     res.send(req.query["hub.challenge"]);
@@ -24,7 +30,9 @@ let token =
   "EAAEAaBJDBFQBALdr7koRDeS7MMcPvLnUZBuwFMuJ0GNx1jb9cCyQyVHUSX1nbJaMjF3uNpZA71TxegrbvhfQwC29ZAKAmRqJlBUYJtNlZAQwkNTWR91ZAtpBzDWCGgQrOOBZAaxye4mjox6lfw2cgBeJmbQGCRs71HlQW9rrpdlet4dFav7O1f7S2MRnQI8BoZD";
 
 app.post("/webhook", (req, res) => {
+    console.log("----------- post webhook ---------------");
     console.log(req);
+    console.log("---------------- end post webhook ----------");
   let messaging_events = req.body.entry[0].messaging;
   for (let i = 0; i < messaging_events.length; i++) {
     let event = messaging_events[i];
