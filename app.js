@@ -130,6 +130,9 @@ sendText = (sender, text) => {
       } else if (response.body.error) {
         console.log("response body error");
       }
+      console.log("**** RESPONSE START ******")
+      console.log(response)
+      console.log("**** RESPONSE END ******")
     };
 };
 
