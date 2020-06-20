@@ -26,33 +26,43 @@ let token =
 
 app.post("/webhook", (req, res) => {
   console.log("----------- post webhook ---------------");
-  console.log("Printing req.body: ", req.body);
-  console.log("Printing req.body.entry: ", req.body.entry);
-  console.log(
-    "Printing req.body.entry[0].messaging: ",
-    req.body.entry[0].messaging
-  );
-  console.log(
-    "Printing req.body.entry[0].messaging[0]: ",
-    req.body.entry[0].messaging[0]
-  );
-  console.log(
-    "Printing req.body.entry[0].messaging[0].message: ",
-    req.body.entry[0].messaging[0].message
-  );
-  console.log("---------------- end post webhook ----------");
+  // console.log("Printing req.body: ", req.body);
+  //   console.log("Printing req.body.entry: ", req.body.entry);
+  //   console.log(
+  //     "Printing req.body.entry[0].messaging: ",
+  //     req.body.entry[0].messaging
+  //   );
+  //   console.log(
+  //     "Printing req.body.entry[0].messaging[0]: ",
+  //     req.body.entry[0].messaging[0]
+  //   );
+  //   console.log(
+  //     "Printing req.body.entry[0].messaging[0].message: ",
+  //     req.body.entry[0].messaging[0].message
+  //   );
 
   let messaging_events = req.body.entry[0].messaging;
   for (let i = 0; i < messaging_events.length; i++) {
     let event = messaging_events[i];
     let sender = event.sender.id;
-    if (event.message && event.message.text) {
-      console.log("i is: ", i);
-      let text = event.message.text;
-      sendText(sender, "Echo of: " + text.substring(0, 100));
+    if (event.message && event.message.text && event.message.quick_reply) {
+      //   let text = event.message.text;
+      let quickReply = event.message.quick_reply.payload;
+
+      switch (quickReply) {
+        case "getInvolved": {
+          sendText(sender, "you clicked get involved");
+          break;
+        }
+        case "addOpportunity": {
+          sendText(sender, "you clicked add opportunity");
+          break;
+        }
+      }
     }
+    res.sendStatus(200);
   }
-  res.sendStatus(200);
+  console.log("---------------- end post webhook ----------");
 });
 
 sendText = (sender, text) => {
@@ -63,14 +73,14 @@ sendText = (sender, text) => {
       {
         content_type: "text",
         title: "How to get involved",
-        payload: "red",
+        payload: "getInvolved",
         image_url:
           "https://media1.s-nbcnews.com/i/newscms/2016_14/1038571/red-dot-puzzle-tease-today-160406_7042d4e863c03b4a32720f424d48501b.JPG",
       },
       {
         content_type: "text",
         title: "Add an opportunity",
-        payload: "yellow",
+        payload: "addOpportunity",
         image_url:
           "https://newyork.cbslocal.com/wp-content/uploads/sites/14578484/2011/12/yellowdot_420_1.jpg?w=420&h=316&crop=1",
       },
