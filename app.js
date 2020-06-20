@@ -30,19 +30,22 @@ let token =
 
 app.post("/webhook", (req, res) => {
   console.log("----------- post webhook ---------------");
-  console.log("req.body.entry[0].messaging[0]", req.body.entry[0].messaging[0]);
   console.log(
-    "req.body.entry[0].messaging[0].message",
+    "Printing req.body.entry[0].messaging[0]: ",
+    req.body.entry[0].messaging[0]
+  );
+  console.log(
+    "Printing req.body.entry[0].messaging[0].message: ",
     req.body.entry[0].messaging[0].message
   );
-
-  console.log(req.body.entry[0].messaging[0].message);
   console.log("---------------- end post webhook ----------");
+
   let messaging_events = req.body.entry[0].messaging;
   for (let i = 0; i < messaging_events.length; i++) {
     let event = messaging_events[i];
     let sender = event.sender.id;
     if (event.message && event.message.text) {
+      console.log("i is: ", i);
       let text = event.message.text;
       sendText(sender, "Echo of: " + text.substring(0, 100));
     }
