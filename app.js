@@ -12,6 +12,8 @@ app.use(bodyParser.json());
 app.get("/", (req, res) => res.send("Hi I am a chatbot."));
 
 app.get("/webhook/", (req, res) => {
+    console.log(req);
+
   if (req.query["hub.verify_token"] === "cacheRegister112358") {
     res.send(req.query["hub.challenge"]);
   }
@@ -22,6 +24,7 @@ let token =
   "EAAEAaBJDBFQBALdr7koRDeS7MMcPvLnUZBuwFMuJ0GNx1jb9cCyQyVHUSX1nbJaMjF3uNpZA71TxegrbvhfQwC29ZAKAmRqJlBUYJtNlZAQwkNTWR91ZAtpBzDWCGgQrOOBZAaxye4mjox6lfw2cgBeJmbQGCRs71HlQW9rrpdlet4dFav7O1f7S2MRnQI8BoZD";
 
 app.post("/webhook", (req, res) => {
+    console.log(req);
   let messaging_events = req.body.entry[0].messaging;
   for (let i = 0; i < messaging_events.length; i++) {
     let event = messaging_events[i];
@@ -38,12 +41,12 @@ sendText = (sender, text) => {
   let messageData = { text: text, "quick_replies":[
     {
       "content_type":"text",
-      "title":"Red",
+      "title":"How to get involved",
       "payload":"red",
       "image_url":"https://media1.s-nbcnews.com/i/newscms/2016_14/1038571/red-dot-puzzle-tease-today-160406_7042d4e863c03b4a32720f424d48501b.JPG"
     },{
       "content_type":"text",
-      "title":"Yellow",
+      "title":"Add an opportunity",
       "payload":"yellow",
       "image_url":"https://newyork.cbslocal.com/wp-content/uploads/sites/14578484/2011/12/yellowdot_420_1.jpg?w=420&h=316&crop=1"
     }
