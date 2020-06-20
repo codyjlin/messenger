@@ -36,27 +36,31 @@ app.post("/webhook", (req, res) => {
   //     "Printing req.body.entry[0].messaging[0]: ",
   //     req.body.entry[0].messaging[0]
   //   );
-  //   console.log(
-  //     "Printing req.body.entry[0].messaging[0].message: ",
-  //     req.body.entry[0].messaging[0].message
-  //   );
+  console.log(
+    "Printing req.body.entry[0].messaging[0].message: ",
+    req.body.entry[0].messaging[0].message
+  );
 
   let messaging_events = req.body.entry[0].messaging;
   for (let i = 0; i < messaging_events.length; i++) {
     let event = messaging_events[i];
     let sender = event.sender.id;
-    if (event.message && event.message.text && event.message.quick_reply) {
-      //   let text = event.message.text;
-      let quickReply = event.message.quick_reply.payload;
+    if (event.message && event.message.text) {
+      let text = event.message.text;
+      sendText(sender, "Echo of: " + text.substring(0, 100));
 
-      switch (quickReply) {
-        case "getInvolved": {
-          sendText(sender, "you clicked get involved");
-          break;
-        }
-        case "addOpportunity": {
-          sendText(sender, "you clicked add opportunity");
-          break;
+      if (event.message.quick_reply) {
+        let quickReply = event.message.quick_reply.payload;
+
+        switch (quickReply) {
+          case "getInvolved": {
+            sendText(sender, "you clicked get involved");
+            break;
+          }
+          case "addOpportunity": {
+            sendText(sender, "you clicked add opportunity");
+            break;
+          }
         }
       }
     }
