@@ -45,10 +45,35 @@ app.post("/webhook", (req, res) => {
       console.log("i is: ", i);
       let text = event.message.text;
       sendText(sender, "Echo of: " + text.substring(0, 100));
+      askForZipcode(sender);
     }
   }
   res.sendStatus(200);
 });
+
+askForZipcode = (sender) => {
+    console.log("ASKING FOR ZIPCODE");
+    let messageData = {
+        text: "What is your zipcode?",
+    };
+    request({
+        url: "https://graph.facebook.com/v7.0/me/messages",
+        qs: { access_token: token },
+        method: "POST",
+        json: {
+            messaging_type: "RESPONSE",
+            recipient: { id: sender },
+            message: messageData,
+        },
+    }),
+    (error, response, body) => {
+        if (error) {
+        console.log("error");
+        } else if (response.body.error) {
+        console.log("response body error");
+        }
+    };
+}
 
 sendText = (sender, text) => {
   console.log("SENDING TEXT");
@@ -72,7 +97,7 @@ sendText = (sender, text) => {
     ],
   };
   request({
-    url: "https://graph.facebook.com/v2.6/me/messages",
+    url: "https://graph.facebook.com/v7.0/me/messages",
     qs: { access_token: token },
     method: "POST",
     json: {
