@@ -31,6 +31,10 @@ let token =
 app.post("/webhook", (req, res) => {
   console.log("----------- post webhook ---------------");
   console.log(
+    "Printing req.body.entry[0].messaging: ",
+    req.body.entry[0].messaging
+  );
+  console.log(
     "Printing req.body.entry[0].messaging[0]: ",
     req.body.entry[0].messaging[0]
   );
@@ -54,6 +58,7 @@ app.post("/webhook", (req, res) => {
 });
 
 sendText = (sender, text) => {
+  console.log("SENDING TEXT");
   let messageData = {
     text: text,
     quick_replies: [
