@@ -66,7 +66,7 @@ askForZipcode = (sender) => {
         qs: { access_token: token },
         method: "POST",
         json: {
-            messaging_type: "RESPONSE",
+            messaging_type: "UPDATE",
             recipient: { id: sender },
             message: messageData,
         },
