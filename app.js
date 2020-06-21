@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const request = require("request");
 
+
 const app = express();
 
 app.set("port", process.env.PORT || 5000);
@@ -65,14 +66,56 @@ app.post("/webhook", (req, res) => {
   for (let i = 0; i < messaging_events.length; i++) {
     let event = messaging_events[i];
     let sender = event.sender.id;
+
+
+    let body = req.body;
+
+  // Checks if this is an event from a page subscription
+  if (body.object === "page") {
+    // Returns a '200 OK' response to all requests
+    res.status(200).send("EVENT_RECEIVED");
+
+    // Iterates over each entry - there may be multiple if batched
+    body.entry.forEach(function(entry) {
+      if ("changes" in entry) {
+        // Handle Page Changes event
+        if (entry.changes[0].field === "feed") {
+          let change = entry.changes[0].value;
+          switch (change.item) {
+            case "post":
+                sendText(sender, {
+                    text: "Post Echo of: " + change.post_id + text.substring(0, 100),
+                    quick_replies: actQuickReplies,
+                    });
+            //   return receiveMessage.handlePrivateReply(
+            //     "post_id",
+            //     change.post_id
+            //   );
+              break;
+            case "comment":
+                sendText(sender, {
+                    text: "Comment Echo of: " + change.comment_id + text.substring(0, 100),
+                    quick_replies: actQuickReplies,
+                    });
+            //   return receiveMessage.handlePrivateReply(
+            //     "commentgity _id",
+            //     change.comment_id
+              // );
+              break;
+            default:
+              console.log('Unsupported feed change type.');
+              return;
+          }
+        }
+      }
+
+
+
+
+
+
     // first check for private stories
-    if (event.message && event.message.text && event.sender.comment_id) {
-        console.log("--------- got a comment! --------");
-        sendText(sender, {
-            text: "This is a private story reply echo" + text.substring(0, 100),
-            quick_replies: actQuickReplies,
-          });
-    } else if (event.message && event.message.text) {
+    if (event.message && event.message.text) {
       let text = event.message.text;
 
       sendText(sender, {
