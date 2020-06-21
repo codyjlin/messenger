@@ -92,7 +92,7 @@ app.post("/webhook", (req, res) => {
 });
 
 askForZipcode = (sender) => {
-  console.log("ASKING FOR ZIPCODE");
+  console.log("ASKING FOR ZIPCODE HERE");
   let messageData = {
     text: "What is your zipcode?",
   };
