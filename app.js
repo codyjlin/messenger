@@ -41,6 +41,9 @@ let actQuickReplies = [
   },
 ];
 
+// Our page now has a test post for the purpose of testing private replies
+let sample_post_id = 105528631213517;
+
 app.post("/webhook", (req, res) => {
   console.log("----------- post webhook ---------------");
   // console.log("Printing req.body: ", req.body);
@@ -62,7 +65,13 @@ app.post("/webhook", (req, res) => {
   for (let i = 0; i < messaging_events.length; i++) {
     let event = messaging_events[i];
     let sender = event.sender.id;
-    if (event.message && event.message.text) {
+    // first check for private stories
+    if (event.message && event.message.text && event.sender.post_id) {
+        sendText(sender, {
+            text: "This is a private story reply echo" + text.substring(0, 100),
+            quick_replies: actQuickReplies,
+          });
+    } else if (event.message && event.message.text) {
       let text = event.message.text;
 
       sendText(sender, {
