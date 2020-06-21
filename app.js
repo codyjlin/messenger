@@ -66,7 +66,8 @@ app.post("/webhook", (req, res) => {
     let event = messaging_events[i];
     let sender = event.sender.id;
     // first check for private stories
-    if (event.message && event.message.text && event.sender.post_id) {
+    if (event.message && event.message.text && event.sender.comment_id) {
+        console.log("--------- got a comment! --------");
         sendText(sender, {
             text: "This is a private story reply echo" + text.substring(0, 100),
             quick_replies: actQuickReplies,
