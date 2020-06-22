@@ -49,17 +49,21 @@ app.post("/webhook", (req, res) => {
   console.log("Printing req.body: ", req.body);
   console.log("Printing req.body.entry: ", req.body.entry);
   console.log(
-    "Printing req.body.entry[0].messaging: ",
-    req.body.entry[0].messaging
+    "Printing req.body.entry[0].changes: ",
+    req.body.entry[0].changes
   );
-  console.log(
-    "Printing req.body.entry[0].messaging[0]: ",
-    req.body.entry[0].messaging[0]
-  );
-  console.log(
-    "Printing req.body.entry[0].messaging[0].message: ",
-    req.body.entry[0].messaging[0].message
-  );
+  // console.log(
+  //   "Printing req.body.entry[0].messaging: ",
+  //   req.body.entry[0].messaging
+  // );
+  // console.log(
+  //   "Printing req.body.entry[0].messaging[0]: ",
+  //   req.body.entry[0].messaging[0]
+  // );
+  // console.log(
+  //   "Printing req.body.entry[0].messaging[0].message: ",
+  //   req.body.entry[0].messaging[0].message
+  // );
 
   let messaging_events = req.body.entry[0].messaging;
   for (let i = 0; i < messaging_events.length; i++) {
