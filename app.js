@@ -23,6 +23,7 @@ res.send("Wrong token");
 
 let token =
   "EAAEAaBJDBFQBALdr7koRDeS7MMcPvLnUZBuwFMuJ0GNx1jb9cCyQyVHUSX1nbJaMjF3uNpZA71TxegrbvhfQwC29ZAKAmRqJlBUYJtNlZAQwkNTWR91ZAtpBzDWCGgQrOOBZAaxye4mjox6lfw2cgBeJmbQGCRs71HlQW9rrpdlet4dFav7O1f7S2MRnQI8BoZD";
+let pageID = "100485215051192";
 
 let actQuickReplies = [
   {
@@ -47,10 +48,14 @@ let sample_post_id = 105528631213517;
 app.post("/webhook", (req, res) => {
   console.log("----------- post webhook ---------------");
   console.log("Printing req.body: ", req.body);
-  console.log("Printing req.body.entry: ", req.body.entry);
+  // console.log("Printing req.body.entry: ", req.body.entry);
   console.log(
     "Printing req.body.entry[0].changes: ",
     req.body.entry[0].changes
+  );
+  console.log(
+    "Printing req.body.entry[0].changes.value.from: ",
+    req.body.entry[0].changes.value.from
   );
   // console.log(
   //   "Printing req.body.entry[0].messaging: ",
