@@ -66,47 +66,42 @@ app.post("/webhook", (req, res) => {
     let event = messaging_events[i];
     let sender = event.sender.id;
 
-    let body = req.body;
+    let body = req.body; // Checks if this is an event from a page subscription
 
-  // Checks if this is an event from a page subscription
-  if (body.object === "page") {
-    // Returns a '200 OK' response to all requests
-    res.status(200).send("EVENT_RECEIVED");
+    if (body.object === "page") {
+      // Returns a '200 OK' response to all requests
+      res.status(200).send("EVENT_RECEIVED"); // Iterates over each entry - there may be multiple if batched
 
-    // Iterates over each entry - there may be multiple if batched
-    body.entry.forEach(function(entry) {
-      if ("changes" in entry) {
-        // Handle Page Changes event
-        if (entry.changes[0].field === "feed") {
-          let change = entry.changes[0].value;
-          switch (change.item) {
-            case "post":
-                sendText(sender, {
-                    text: "Post Echo of: " + change.post_id + text.substring(0, 100),
-                    quick_replies: actQuickReplies,
-                    });
-              break;
-            case "comment":
-                sendText(sender, {
-                    text: "Comment Echo of: " + change.comment_id + text.substring(0, 100),
-                    quick_replies: actQuickReplies,
-                    });
-              break;
-            default:
-              console.log('Unsupported feed change type.');
-              return;
-          }
-        }
-      }
-    }
-  )}
-
-    
-
-
-
-
-
+      body.entry.forEach(function (entry) {
+        if ("changes" in entry) {
+          // Handle Page Changes event
+          if (entry.changes[0].field === "feed") {
+            let change = entry.changes[0].value;
+            switch (change.item) {
+              case "post":
+                sendText(sender, {
+                  text:
+                    "Post Echo of: " + change.post_id + text.substring(0, 100),
+                  quick_replies: actQuickReplies,
+                });
+                break;
+              case "comment":
+                sendText(sender, {
+                  text:
+                    "Comment Echo of: " +
+                    change.comment_id +
+                    text.substring(0, 100),
+                  quick_replies: actQuickReplies,
+                });
+                break;
+              default:
+                console.log("Unsupported feed change type.");
+                return;
+            }
+          }
+        }
+      });
+    }
 
     // first check for private stories
     if (event.message && event.message.text) {
@@ -162,27 +157,9 @@ askForZipcode = (sender) => {
     };
 };
 
-sendText = (sender, text) => {
+sendText = (sender, messageData) => {
   console.log("SENDING TEXT");
-  let messageData = {
-    text: text,
-    quick_replies: [
-      {
-        content_type: "text",
-        title: "How to get involved",
-        payload: "getInvolved",
-        image_url:
-          "https://media1.s-nbcnews.com/i/newscms/2016_14/1038571/red-dot-puzzle-tease-today-160406_7042d4e863c03b4a32720f424d48501b.JPG",
-      },
-      {
-        content_type: "text",
-        title: "Add an opportunity",
-        payload: "addOpportunity",
-        image_url:
-          "https://newyork.cbslocal.com/wp-content/uploads/sites/14578484/2011/12/yellowdot_420_1.jpg?w=420&h=316&crop=1",
-      },
-    ],
-  };
+  let messageData = messageData;
   request({
     url: "https://graph.facebook.com/v7.0/me/messages",
     qs: { access_token: token },
