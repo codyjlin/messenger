@@ -159,7 +159,6 @@ askForZipcode = (sender) => {
 
 sendText = (sender, messageData) => {
   console.log("SENDING TEXT");
-  let messageData = messageData;
   request({
     url: "https://graph.facebook.com/v7.0/me/messages",
     qs: { access_token: token },
