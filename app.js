@@ -55,7 +55,7 @@ app.post("/webhook", (req, res) => {
   );
   console.log(
     "Printing req.body.entry[0].changes.value.from: ",
-    req.body.entry[0].changes.value.from
+    req.body.entry[0].changes[0].value.from
   );
   // console.log(
   //   "Printing req.body.entry[0].messaging: ",
