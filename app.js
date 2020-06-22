@@ -46,16 +46,16 @@ let sample_post_id = 105528631213517;
 
 app.post("/webhook", (req, res) => {
   console.log("----------- post webhook ---------------");
-  // console.log("Printing req.body: ", req.body);
-  //   console.log("Printing req.body.entry: ", req.body.entry);
-  //   console.log(
-  //     "Printing req.body.entry[0].messaging: ",
-  //     req.body.entry[0].messaging
-  //   );
-  //   console.log(
-  //     "Printing req.body.entry[0].messaging[0]: ",
-  //     req.body.entry[0].messaging[0]
-  //   );
+  console.log("Printing req.body: ", req.body);
+  console.log("Printing req.body.entry: ", req.body.entry);
+  console.log(
+    "Printing req.body.entry[0].messaging: ",
+    req.body.entry[0].messaging
+  );
+  console.log(
+    "Printing req.body.entry[0].messaging[0]: ",
+    req.body.entry[0].messaging[0]
+  );
   console.log(
     "Printing req.body.entry[0].messaging[0].message: ",
     req.body.entry[0].messaging[0].message
