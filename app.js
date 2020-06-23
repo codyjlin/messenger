@@ -71,8 +71,6 @@ app.post("/webhook", (req, res) => {
   //   req.body.entry[0].messaging[0].message
   // );
 
-  
-
   let messaging_events = req.body.entry[0].messaging;
   for (let i = 0; i < messaging_events.length; i++) {
     let event = messaging_events[i];
@@ -80,58 +78,17 @@ app.post("/webhook", (req, res) => {
 
     console.log("---- user id is -----");
     console.log(sender);
-    
-    let body = req.body;
 
-  // Checks if this is an event from a page subscription
-  if (body.object === "page") {
-    // Returns a '200 OK' response to all requests
-    res.status(200).send("EVENT_RECEIVED");
-
-    // Iterates over each entry - there may be multiple if batched
-    body.entry.forEach(function(entry) {
-      if ("changes" in entry) {
-        // Handle Page Changes event
-        if (entry.changes[0].field === "feed") {
-          let change = entry.changes[0].value;
-          switch (change.item) {
-            case "post":
-                sendText(sender, {
-                    text: "Post Echo of: " + change.post_id + text.substring(0, 100),
-                    quick_replies: actQuickReplies,
-                    });
-              break;
-            case "comment":
-                sendText(sender, {
-                    text: "Comment Echo of: " + change.comment_id + text.substring(0, 100),
-                    quick_replies: actQuickReplies,
-                    });
-              break;
-            default:
-              console.log('Unsupported feed change type.');
-              return;
-          }
-        }
-      }
-    }
-  )}
-
-    
-
-
-
-
-
+    let body = req.body; // Checks if this is an event from a page subscription
 
     // first check for private stories
     if (event.message && event.message.text) {
       let text = event.message.text;
-
+      askForZipcode(sender);
       sendText(sender, {
         text: "Echo of: " + text.substring(0, 100),
         quick_replies: actQuickReplies,
       });
-      askForZipcode(sender);
 
       if (event.message.quick_reply) {
         let quickReply = event.message.quick_reply.payload;
