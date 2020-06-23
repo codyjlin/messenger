@@ -74,6 +74,7 @@ app.post("/webhook", (req, res) => {
   
 
   let messaging_events = req.body.entry[0].messaging;
+  var body= req.body;
   for (let i = 0; i < messaging_events.length; i++) {
     let event = messaging_events[i];
     let sender = event.sender.id;
@@ -81,7 +82,7 @@ app.post("/webhook", (req, res) => {
     console.log("---- user id is -----");
     console.log(sender);
     
-    let body = req.body;
+    
 
   // Checks if this is an event from a page subscription
   if (body.object === "page") {
