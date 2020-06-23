@@ -72,18 +72,15 @@ app.post("/webhook", (req, res) => {
   // );
 
   let messaging_events = req.body.entry[0].messaging;
-  var body = req.body;
+  let body = req.body;
   for (let i = 0; i < messaging_events.length; i++) {
     let event = messaging_events[i];
     let sender = event.sender.id;
 
-    console.log("---- user id is -----");
-    console.log(sender); // Checks if this is an event from a page subscription
-
     // first check for private stories
     if (event.message && event.message.text) {
       let text = event.message.text;
-      askForZipcode(sender);
+      // askForZipcode(sender);
       sendText(sender, {
         text: "Echo of: " + text.substring(0, 100),
         quick_replies: actQuickReplies,
@@ -111,9 +108,8 @@ app.post("/webhook", (req, res) => {
         }
       }
     }
-
-    // let body = req.body; // Checks if this is an event from a page subscription
-
+    
+    // CODE FOR PRIVATE REPLIES
     if (body.object === "page") {
       // Returns a '200 OK' response to all requests
       res.status(200).send("EVENT_RECEIVED"); // Iterates over each entry - there may be multiple if batched
