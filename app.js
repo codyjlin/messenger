@@ -58,23 +58,9 @@ app.post("/webhook", (req, res) => {
       req.body.entry[0].changes[0].value.from
     );
   }
-  // console.log(
-  //   "Printing req.body.entry[0].messaging: ",
-  //   req.body.entry[0].messaging
-  // );
-  // console.log(
-  //   "Printing req.body.entry[0].messaging[0]: ",
-  //   req.body.entry[0].messaging[0]
-  // );
-  // console.log(
-  //   "Printing req.body.entry[0].messaging[0].message: ",
-  //   req.body.entry[0].messaging[0].message
-  // );
-
-  
 
   let messaging_events = req.body.entry[0].messaging;
-  var body= req.body;
+  let body = req.body;
   for (let i = 0; i < messaging_events.length; i++) {
     let event = messaging_events[i];
     let sender = event.sender.id;
@@ -82,8 +68,6 @@ app.post("/webhook", (req, res) => {
     console.log("---- user id is -----");
     console.log(sender);
     
-    
-
   // Checks if this is an event from a page subscription
   if (body.object === "page") {
     // Returns a '200 OK' response to all requests
@@ -150,7 +134,7 @@ app.post("/webhook", (req, res) => {
       }
     }
 
-    let body = req.body; // Checks if this is an event from a page subscription
+    // let body = req.body; // Checks if this is an event from a page subscription
 
     if (body.object === "page") {
       // Returns a '200 OK' response to all requests
