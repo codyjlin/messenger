@@ -72,14 +72,13 @@ app.post("/webhook", (req, res) => {
   // );
 
   let messaging_events = req.body.entry[0].messaging;
+  var body = req.body;
   for (let i = 0; i < messaging_events.length; i++) {
     let event = messaging_events[i];
     let sender = event.sender.id;
 
     console.log("---- user id is -----");
-    console.log(sender);
-
-    let body = req.body; // Checks if this is an event from a page subscription
+    console.log(sender); // Checks if this is an event from a page subscription
 
     // first check for private stories
     if (event.message && event.message.text) {
