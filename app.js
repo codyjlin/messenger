@@ -74,6 +74,32 @@ app.post("/webhook", (req, res) => {
     let event = messaging_events[i];
     let sender = event.sender.id;
 
+    // first check for private stories
+    if (event.message && event.message.text) {
+      let text = event.message.text;
+
+      sendText(sender, {
+        text: "Echo of: " + text.substring(0, 100),
+        quick_replies: actQuickReplies,
+      });
+      askForZipcode(sender);
+
+      if (event.message.quick_reply) {
+        let quickReply = event.message.quick_reply.payload;
+
+        switch (quickReply) {
+          case "getInvolved": {
+            sendText(sender, { text: "you clicked get involved" });
+            break;
+          }
+          case "addOpportunity": {
+            sendText(sender, { text: "you clicked add opportunity" });
+            break;
+          }
+        }
+      }
+    }
+
     let body = req.body; // Checks if this is an event from a page subscription
 
     if (body.object === "page") {
@@ -111,31 +137,6 @@ app.post("/webhook", (req, res) => {
       });
     }
 
-    // first check for private stories
-    if (event.message && event.message.text) {
-      let text = event.message.text;
-
-      sendText(sender, {
-        text: "Echo of: " + text.substring(0, 100),
-        quick_replies: actQuickReplies,
-      });
-      askForZipcode(sender);
-
-      if (event.message.quick_reply) {
-        let quickReply = event.message.quick_reply.payload;
-
-        switch (quickReply) {
-          case "getInvolved": {
-            sendText(sender, { text: "you clicked get involved" });
-            break;
-          }
-          case "addOpportunity": {
-            sendText(sender, { text: "you clicked add opportunity" });
-            break;
-          }
-        }
-      }
-    }
     res.sendStatus(200);
   }
   console.log("---------------- end post webhook ----------");
