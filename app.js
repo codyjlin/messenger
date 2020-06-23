@@ -61,11 +61,16 @@ app.post("/webhook", (req, res) => {
     req.body.entry[0].messaging[0].message
   );
 
+  
+
   let messaging_events = req.body.entry[0].messaging;
   for (let i = 0; i < messaging_events.length; i++) {
     let event = messaging_events[i];
     let sender = event.sender.id;
 
+    console.log("---- user id is -----");
+    console.log(sender);
+    
     let body = req.body;
 
   // Checks if this is an event from a page subscription
