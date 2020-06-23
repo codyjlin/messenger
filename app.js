@@ -86,8 +86,8 @@ app.post("/webhook", (req, res) => {
         quick_replies: actQuickReplies,
       });
 
-      let millisecondsToWait = 100;
-        setTimeout(function() {
+      let millisecondsToWait = 40;
+        setTimeout(() => {
             // Whatever you want to do after the wait
             askForZipcode(sender);
         }, millisecondsToWait);
@@ -98,17 +98,27 @@ app.post("/webhook", (req, res) => {
 
         switch (quickReply) {
           case "getInvolved": {
-            sendText(sender, { text: "you clicked get involved" });
+            let quickReplyMillisecondsToWait = millisecondsToWait + 30;
+            setTimeout(() => {
+                // Whatever you want to do after the wait
+                sendText(sender, { text: "you clicked get involved" });
+            }, quickReplyMillisecondsToWait);
+            
             break;
           }
           case "addOpportunity": {
-            sendText(sender, { text: "you clicked add opportunity" });
+            let oppquickReplyMillisecondsToWait = millisecondsToWait + 30;
+            setTimeout(() => {
+                // Whatever you want to do after the wait
+                sendText(sender, { text: "you clicked add opportunity" });
+            }, oppquickReplyMillisecondsToWait);
+            
             break;
           }
         }
       }
     }
-    
+
     // CODE FOR PRIVATE REPLIES
     if (body.object === "page") {
       // Returns a '200 OK' response to all requests
