@@ -170,7 +170,7 @@ askForZipcode = (sender) => {
     qs: { access_token: token },
     method: "POST",
     json: {
-      messaging_type: "UPDATE",
+      messaging_type: "RESPONSE",
       recipient: { id: sender },
       message: messageData,
     },
@@ -184,7 +184,41 @@ askForZipcode = (sender) => {
     };
 };
 
-sendText = (sender, messageData) => {
+respondGetInvolved = (sender) => {
+    console.log("RESPONDING TO ADDRESS AFTER GET INVOLVED QUICK REPLY");
+    let imageData = {
+      attachment: {
+          type: "image",
+        //   type: "file",
+          payload: {
+            url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Fist.svg/1200px-Fist.svg.png",
+            is_resuable: true,
+          },
+      }
+    };
+    request({
+      url: "https://graph.facebook.com/v7.0/me/messages",
+      qs: { access_token: token },
+      method: "POST",
+      json: {
+        messaging_type: "RESPONSE",
+        recipient: { id: sender },
+        message: imageData,
+        // filedata: ("img/blm.jpg", "image/jpeg"),
+        // filedata: "@/img/blm.jpg",
+        // type: "image/jpeg"
+      },
+    }),
+      (error, response, body) => {
+        if (error) {
+          console.log("error");
+        } else if (response.body.error) {
+          console.log("response body error");
+        }
+      };
+};
+
+sendText = (sender, text) => {
   console.log("SENDING TEXT");
   request({
     url: "https://graph.facebook.com/v7.0/me/messages",
@@ -201,9 +235,6 @@ sendText = (sender, messageData) => {
       } else if (response.body.error) {
         console.log("response body error");
       }
-      console.log("**** RESPONSE START ******");
-      console.log(response);
-      console.log("**** RESPONSE END ******");
     };
 };
 
