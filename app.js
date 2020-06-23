@@ -116,7 +116,12 @@ app.post("/webhook", (req, res) => {
         text: "Echo of: " + text.substring(0, 100),
         quick_replies: actQuickReplies,
       });
-      askForZipcode(sender);
+      let millisecondsToWait = 100;
+        setTimeout(function() {
+            // Whatever you want to do after the wait
+            askForZipcode(sender);
+        }, millisecondsToWait);
+      
 
       if (event.message.quick_reply) {
         let quickReply = event.message.quick_reply.payload;
