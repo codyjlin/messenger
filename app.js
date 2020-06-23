@@ -31,14 +31,13 @@ let actQuickReplies = [
     title: "How to get involved",
     payload: "getInvolved",
     image_url:
-      "https://media1.s-nbcnews.com/i/newscms/2016_14/1038571/red-dot-puzzle-tease-today-160406_7042d4e863c03b4a32720f424d48501b.JPG",
+      "https://ih1.redbubble.net/image.296010023.6499/st,small,507x507-pad,600x600,f8f8f8.jpg",
   },
   {
     content_type: "text",
     title: "Add an opportunity",
     payload: "addOpportunity",
-    image_url:
-      "https://newyork.cbslocal.com/wp-content/uploads/sites/14578484/2011/12/yellowdot_420_1.jpg?w=420&h=316&crop=1",
+    image_url: "https://img.icons8.com/doodle/48/000000/plus--v1.png",
   },
 ];
 
