@@ -48,14 +48,16 @@ app.post("/webhook", (req, res) => {
   console.log("----------- post webhook ---------------");
   console.log("Printing req.body: ", req.body);
   // console.log("Printing req.body.entry: ", req.body.entry);
-  console.log(
-    "Printing req.body.entry[0].changes: ",
-    req.body.entry[0].changes
-  );
-  console.log(
-    "Printing req.body.entry[0].changes.value.from: ",
-    req.body.entry[0].changes[0].value.from
-  );
+  if (req.body.entry && req.body.entry[0].changes) {
+    console.log(
+      "Printing req.body.entry[0].changes: ",
+      req.body.entry[0].changes
+    );
+    console.log(
+      "Printing req.body.entry[0].changes.value.from: ",
+      req.body.entry[0].changes[0].value.from
+    );
+  }
   // console.log(
   //   "Printing req.body.entry[0].messaging: ",
   //   req.body.entry[0].messaging
