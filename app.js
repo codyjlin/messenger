@@ -23,8 +23,21 @@ res.send("Wrong token");
 
 let token =
   "EAAEAaBJDBFQBALdr7koRDeS7MMcPvLnUZBuwFMuJ0GNx1jb9cCyQyVHUSX1nbJaMjF3uNpZA71TxegrbvhfQwC29ZAKAmRqJlBUYJtNlZAQwkNTWR91ZAtpBzDWCGgQrOOBZAaxye4mjox6lfw2cgBeJmbQGCRs71HlQW9rrpdlet4dFav7O1f7S2MRnQI8BoZD";
-let pageID = "100485215051192";
 
+let joinQuickReplies = [
+  {
+    content_type: "text",
+    title: "Yes!",
+    payload: "yes",
+    image_url: "https://img.icons8.com/flat_round/64/000000/checkmark.png",
+  },
+  {
+    content_type: "text",
+    title: "No",
+    payload: "no",
+    image_url: "https://img.icons8.com/cute-clipart/64/000000/close-window.png",
+  },
+];
 let actQuickReplies = [
   {
     content_type: "text",
@@ -38,6 +51,34 @@ let actQuickReplies = [
     title: "Add an opportunity",
     payload: "addOpportunity",
     image_url: "https://img.icons8.com/doodle/48/000000/plus--v1.png",
+  },
+];
+
+let getInvolvedQuickReplies = [
+  {
+    content_type: "text",
+    title: "Donate",
+    payload: "donate",
+    image_url: "https://img.icons8.com/bubbles/50/000000/money.png",
+  },
+  {
+    content_type: "text",
+    title: "Peaceful protest",
+    payload: "protest",
+    image_url: "https://img.icons8.com/dusk/64/000000/strike.png",
+  },
+  {
+    content_type: "text",
+    title: "Email a local official",
+    payload: "email",
+    image_url: "https://img.icons8.com/bubbles/50/000000/email.png",
+  },
+  {
+    content_type: "text",
+    title: "Spread the word",
+    payload: "share",
+    image_url:
+      "https://img.icons8.com/pastel-glyph/64/000000/bullhorn-megaphone--v2.png",
   },
 ];
 
@@ -87,11 +128,10 @@ app.post("/webhook", (req, res) => {
       });
 
       let millisecondsToWait = 40;
-        setTimeout(() => {
-            // Whatever you want to do after the wait
-            askForZipcode(sender);
-        }, millisecondsToWait);
-      
+      setTimeout(() => {
+        // Whatever you want to do after the wait
+        askForZipcode(sender);
+      }, millisecondsToWait);
 
       if (event.message.quick_reply) {
         let quickReply = event.message.quick_reply.payload;
@@ -100,19 +140,19 @@ app.post("/webhook", (req, res) => {
           case "getInvolved": {
             let quickReplyMillisecondsToWait = millisecondsToWait + 30;
             setTimeout(() => {
-                // Whatever you want to do after the wait
-                sendText(sender, { text: "you clicked get involved" });
+              // Whatever you want to do after the wait
+              sendText(sender, { text: "you clicked get involved" });
             }, quickReplyMillisecondsToWait);
-            
+
             break;
           }
           case "addOpportunity": {
             let oppquickReplyMillisecondsToWait = millisecondsToWait + 30;
             setTimeout(() => {
-                // Whatever you want to do after the wait
-                sendText(sender, { text: "you clicked add opportunity" });
+              // Whatever you want to do after the wait
+              sendText(sender, { text: "you clicked add opportunity" });
             }, oppquickReplyMillisecondsToWait);
-            
+
             break;
           }
         }
@@ -185,40 +225,41 @@ askForZipcode = (sender) => {
 };
 
 respondGetInvolved = (sender) => {
-    console.log("RESPONDING TO ADDRESS AFTER GET INVOLVED QUICK REPLY");
-    let imageData = {
-      attachment: {
-          type: "image",
-        //   type: "file",
-          payload: {
-            url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Fist.svg/1200px-Fist.svg.png",
-            is_resuable: true,
-          },
+  console.log("RESPONDING TO ADDRESS AFTER GET INVOLVED QUICK REPLY");
+  let imageData = {
+    attachment: {
+      type: "image",
+      //   type: "file",
+      payload: {
+        url:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Fist.svg/1200px-Fist.svg.png",
+        is_resuable: true,
+      },
+    },
+  };
+  request({
+    url: "https://graph.facebook.com/v7.0/me/messages",
+    qs: { access_token: token },
+    method: "POST",
+    json: {
+      messaging_type: "RESPONSE",
+      recipient: { id: sender },
+      message: imageData,
+      // filedata: ("img/blm.jpg", "image/jpeg"),
+      // filedata: "@/img/blm.jpg",
+      // type: "image/jpeg"
+    },
+  }),
+    (error, response, body) => {
+      if (error) {
+        console.log("error");
+      } else if (response.body.error) {
+        console.log("response body error");
       }
     };
-    request({
-      url: "https://graph.facebook.com/v7.0/me/messages",
-      qs: { access_token: token },
-      method: "POST",
-      json: {
-        messaging_type: "RESPONSE",
-        recipient: { id: sender },
-        message: imageData,
-        // filedata: ("img/blm.jpg", "image/jpeg"),
-        // filedata: "@/img/blm.jpg",
-        // type: "image/jpeg"
-      },
-    }),
-      (error, response, body) => {
-        if (error) {
-          console.log("error");
-        } else if (response.body.error) {
-          console.log("response body error");
-        }
-      };
 };
 
-sendText = (sender, text) => {
+sendText = (sender, messageData) => {
   console.log("SENDING TEXT");
   request({
     url: "https://graph.facebook.com/v7.0/me/messages",
