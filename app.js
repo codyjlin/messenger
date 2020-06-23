@@ -63,13 +63,19 @@ let getInvolvedQuickReplies = [
   },
   {
     content_type: "text",
-    title: "Peaceful protest",
+    title: "Support local businesses",
+    payload: "support",
+    image_url: "https://img.icons8.com/doodle/48/000000/dining-room.png",
+  },
+  {
+    content_type: "text",
+    title: "Peacefully protest",
     payload: "protest",
     image_url: "https://img.icons8.com/dusk/64/000000/strike.png",
   },
   {
     content_type: "text",
-    title: "Email a local official",
+    title: "Email an official",
     payload: "email",
     image_url: "https://img.icons8.com/bubbles/50/000000/email.png",
   },
