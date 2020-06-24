@@ -91,13 +91,13 @@ let getInvolvedQuickReplies = [
 let interestQuickReplies = [
   {
     content_type: "text",
-    title: "How to get involved",
-    payload: "getInvolved",
+    title: "Yes",
+    payload: "isInterested",
   },
   {
     content_type: "text",
-    title: "Add an opportunity",
-    payload: "addOpportunity",
+    title: "No",
+    payload: "notInterested",
   },
 ];
 
