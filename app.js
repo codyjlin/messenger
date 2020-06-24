@@ -88,19 +88,6 @@ let getInvolvedQuickReplies = [
   },
 ];
 
-let interestQuickReplies = [
-  {
-    content_type: "text",
-    title: "Yes",
-    payload: "isInterested",
-  },
-  {
-    content_type: "text",
-    title: "No",
-    payload: "notInterested",
-  },
-];
-
 // Our page now has a test post for the purpose of testing private replies
 let sample_post_id = 105528631213517;
 
@@ -114,7 +101,7 @@ app.post("/webhook", (req, res) => {
       req.body.entry[0].changes
     );
     console.log(
-      "Printing req.body.entry[0].changes.value.from: ",
+      "Printing req.body.entry[0].changes[0].value.from: ",
       req.body.entry[0].changes[0].value.from
     );
   }
@@ -131,101 +118,103 @@ app.post("/webhook", (req, res) => {
   //   req.body.entry[0].messaging[0].message
   // );
 
-  let messaging_events = req.body.entry[0].messaging;
   let body = req.body;
-  for (let i = 0; i < messaging_events.length; i++) {
-    let event = messaging_events[i];
-    let sender = event.sender.id;
 
-    // first check for private stories
-    if (event.message && event.message.text) {
-      let text = event.message.text;
-      // askForZipcode(sender);
+  // Checks if this is an event from a page subscription
+  if (body.object === "page") {
+    // Returns a '200 OK' response to all requests
+    res.status(200).send("EVENT_RECEIVED"); // Iterates over each entry - there may be multiple if batched
 
-      // Ask if interested
-      // sendText(sender, "Are you interested in supporting the BLM movement in your local area?");
-      sendText(sender, {
-        text: "Are you interested in supporting the BLM movement in your local area?",
-        quick_replies: interestQuickReplies,
-      });
+    // Iterates over each entry - there may be multiple if batched
+    body.entry.forEach(function (entry) {
+      // comment or post
+      if ("changes" in entry) {
+        let change = entry.changes[0].value;
+        switch (change.item) {
+          case "post":
+            sendText(
+              { post_id: change.post_id },
+              {
+                text:
+                  "Are you interested in supporting the BLM movement in your local area?",
+                quick_replies: joinQuickReplies,
+              }
+            );
+            break;
+          case "comment":
+            sendText(
+              { comment_id: change.comment_id },
+              {
+                text:
+                  "Are you interested in supporting the BLM movement in your local area?",
+                quick_replies: joinQuickReplies,
+              }
+            );
+            break;
+          default:
+            console.log("Unsupported feed change type.");
+        }
+      }
 
-      sendText(sender, {
-        text: "Echo of: " + text.substring(0, 100),
-        quick_replies: actQuickReplies,
-      });
+      // dm
+      if ("messaging" in entry) {
+        if (
+          entry.messaging[0].message &&
+          entry.messaging[0].message.text == "test"
+        ) {
+          sendText(
+            { id: sender },
+            { text: "you clicked get involved", quick_replies: actQuickReplies }
+          );
+        }
 
+        for (let i = 0; i < entry.messaging.length; i++) {
+          let event = entry.messaging;
+          let sender = event.sender.id;
+
+          if (event.message.quick_reply) {
+            let quickReply = event.message.quick_reply.payload;
+
+            switch (quickReply) {
+              case "getInvolved": {
+                let quickReplyMillisecondsToWait = millisecondsToWait + 30;
+                setTimeout(() => {
+                  // Whatever you want to do after the wait
+                  sendText(
+                    { id: sender },
+                    { text: "you clicked get involved" }
+                  );
+                }, quickReplyMillisecondsToWait);
+
+                break;
+              }
+              case "addOpportunity": {
+                let oppquickReplyMillisecondsToWait = millisecondsToWait + 30;
+                setTimeout(() => {
+                  // Whatever you want to do after the wait
+                  sendText(
+                    { id: sender },
+                    { text: "you clicked add opportunity" }
+                  );
+                }, oppquickReplyMillisecondsToWait);
+
+                break;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+});
+
+/* Code for sleeping
       let millisecondsToWait = 40;
       setTimeout(() => {
         // Whatever you want to do after the wait
         askForZipcode(sender);
       }, millisecondsToWait);
-
-      if (event.message.quick_reply) {
-        let quickReply = event.message.quick_reply.payload;
-
-        switch (quickReply) {
-          case "getInvolved": {
-            let quickReplyMillisecondsToWait = millisecondsToWait + 30;
-            setTimeout(() => {
-              // Whatever you want to do after the wait
-              sendText(sender, { text: "you clicked get involved" });
-            }, quickReplyMillisecondsToWait);
-
-            break;
-          }
-          case "addOpportunity": {
-            let oppquickReplyMillisecondsToWait = millisecondsToWait + 30;
-            setTimeout(() => {
-              // Whatever you want to do after the wait
-              sendText(sender, { text: "you clicked add opportunity" });
-            }, oppquickReplyMillisecondsToWait);
-
-            break;
-          }
-        }
-      }
-    }
-
-    // CODE FOR PRIVATE REPLIES
-    if (body.object === "page") {
-      // Returns a '200 OK' response to all requests
-      res.status(200).send("EVENT_RECEIVED"); // Iterates over each entry - there may be multiple if batched
-
-      body.entry.forEach(function (entry) {
-        if ("changes" in entry) {
-          // Handle Page Changes event
-          if (entry.changes[0].field === "feed") {
-            let change = entry.changes[0].value;
-            switch (change.item) {
-              case "post":
-                sendText(sender, {
-                  text:
-                    "Post Echo of: " + change.post_id + text.substring(0, 100),
-                  quick_replies: actQuickReplies,
-                });
-                break;
-              case "comment":
-                sendText(sender, {
-                  text:
-                    "Comment Echo of: " +
-                    change.comment_id +
-                    text.substring(0, 100),
-                  quick_replies: actQuickReplies,
-                });
-                break;
-              default:
-                console.log("Unsupported feed change type.");
-                return;
-            }
-          }
-        }
-      });
-    }
-
-    res.sendStatus(200);
-  }
-  console.log("---------------- end post webhook ----------");
-});
+*/
 
 askForZipcode = (sender) => {
   console.log("ASKING FOR ZIPCODE HERE");
@@ -255,13 +244,14 @@ respondGetInvolved = (sender) => {
   console.log("RESPONDING TO ADDRESS AFTER GET INVOLVED QUICK REPLY");
   let imageData = {
     attachment: {
-        type: "image",
+      type: "image",
       //   type: "file",
-        payload: {
-          url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Fist.svg/1200px-Fist.svg.png",
-          is_resuable: true,
-        },
-    }
+      payload: {
+        url:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Fist.svg/1200px-Fist.svg.png",
+        is_resuable: true,
+      },
+    },
   };
   request({
     url: "https://graph.facebook.com/v7.0/me/messages",
@@ -285,14 +275,14 @@ respondGetInvolved = (sender) => {
     };
 };
 
-sendText = (sender, messageData) => {
+sendText = (recipient, messageData) => {
   console.log("SENDING TEXT");
   request({
     url: "https://graph.facebook.com/v7.0/me/messages",
     qs: { access_token: token },
     method: "POST",
     json: {
-      recipient: { id: sender },
+      recipient: recipient,
       message: messageData,
     },
   }),
