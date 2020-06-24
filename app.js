@@ -41,6 +41,19 @@ let actQuickReplies = [
   },
 ];
 
+let interestQuickReplies = [
+  {
+    content_type: "text",
+    title: "How to get involved",
+    payload: "getInvolved",
+  },
+  {
+    content_type: "text",
+    title: "Add an opportunity",
+    payload: "addOpportunity",
+  },
+];
+
 // Our page now has a test post for the purpose of testing private replies
 let sample_post_id = 105528631213517;
 
@@ -81,6 +94,11 @@ app.post("/webhook", (req, res) => {
     if (event.message && event.message.text) {
       let text = event.message.text;
       // askForZipcode(sender);
+      sendText(sender, {
+        text: "Echo of: " + text.substring(0, 100),
+        quick_replies: interestQuickReplies,
+      });
+
       sendText(sender, {
         text: "Echo of: " + text.substring(0, 100),
         quick_replies: actQuickReplies,
@@ -185,37 +203,37 @@ askForZipcode = (sender) => {
 };
 
 respondGetInvolved = (sender) => {
-    console.log("RESPONDING TO ADDRESS AFTER GET INVOLVED QUICK REPLY");
-    let imageData = {
-      attachment: {
-          type: "image",
-        //   type: "file",
-          payload: {
-            url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Fist.svg/1200px-Fist.svg.png",
-            is_resuable: true,
-          },
+  console.log("RESPONDING TO ADDRESS AFTER GET INVOLVED QUICK REPLY");
+  let imageData = {
+    attachment: {
+        type: "image",
+      //   type: "file",
+        payload: {
+          url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Fist.svg/1200px-Fist.svg.png",
+          is_resuable: true,
+        },
+    }
+  };
+  request({
+    url: "https://graph.facebook.com/v7.0/me/messages",
+    qs: { access_token: token },
+    method: "POST",
+    json: {
+      messaging_type: "RESPONSE",
+      recipient: { id: sender },
+      message: imageData,
+      // filedata: ("img/blm.jpg", "image/jpeg"),
+      // filedata: "@/img/blm.jpg",
+      // type: "image/jpeg"
+    },
+  }),
+    (error, response, body) => {
+      if (error) {
+        console.log("error");
+      } else if (response.body.error) {
+        console.log("response body error");
       }
     };
-    request({
-      url: "https://graph.facebook.com/v7.0/me/messages",
-      qs: { access_token: token },
-      method: "POST",
-      json: {
-        messaging_type: "RESPONSE",
-        recipient: { id: sender },
-        message: imageData,
-        // filedata: ("img/blm.jpg", "image/jpeg"),
-        // filedata: "@/img/blm.jpg",
-        // type: "image/jpeg"
-      },
-    }),
-      (error, response, body) => {
-        if (error) {
-          console.log("error");
-        } else if (response.body.error) {
-          console.log("response body error");
-        }
-      };
 };
 
 sendText = (sender, text) => {
