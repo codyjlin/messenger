@@ -141,6 +141,9 @@ app.post("/webhook", (req, res) => {
     if (event.message && event.message.text) {
       let text = event.message.text;
       // askForZipcode(sender);
+
+      // Ask if interested
+      sendText(sender, "Are you interested in supporting the BLM movement in your local area?");
       sendText(sender, {
         text: "Echo of: " + text.substring(0, 100),
         quick_replies: interestQuickReplies,
