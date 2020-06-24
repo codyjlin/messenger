@@ -190,10 +190,7 @@ app.post("/webhook", (req, res) => {
         if (
           entry.messaging[0].message &&
           entry.messaging[0].message.text.length == 5 &&
-          entry.messaging[0].message &&
-          Math.floor(Number(entry.messaging[0].message.text)) !== Infinity &&
-          String(Math.floor(Number(entry.messaging[0].message.text))) === str &&
-          Math.floor(Number(entry.messaging[0].message.text)) >= 0
+          !isNaN(entry.messaging[0].message.text)
         ) {
           let sender = entry.messaging[0].sender.id;
           sendText(
@@ -319,65 +316,6 @@ app.post("/webhook", (req, res) => {
         askForZipcode(sender);
       }, millisecondsToWait);
 */
-
-askForZipcode = (sender) => {
-  console.log("ASKING FOR ZIPCODE HERE");
-  let messageData = {
-    text: "What is your zipcode?",
-  };
-  request({
-    url: "https://graph.facebook.com/v7.0/me/messages",
-    qs: { access_token: token },
-    method: "POST",
-    json: {
-      messaging_type: "RESPONSE",
-      recipient: { id: sender },
-      message: messageData,
-    },
-  }),
-    (error, response, body) => {
-      if (error) {
-        console.log("error");
-      } else if (response.body.error) {
-        console.log("response body error");
-      }
-    };
-};
-
-respondGetInvolved = (sender) => {
-  console.log("RESPONDING TO ADDRESS AFTER GET INVOLVED QUICK REPLY");
-  let imageData = {
-    attachment: {
-      type: "image",
-      //   type: "file",
-      payload: {
-        url:
-          "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Fist.svg/1200px-Fist.svg.png",
-        is_resuable: true,
-      },
-    },
-  };
-  request({
-    url: "https://graph.facebook.com/v7.0/me/messages",
-    qs: { access_token: token },
-    method: "POST",
-    json: {
-      messaging_type: "RESPONSE",
-      recipient: { id: sender },
-      message: imageData,
-      // filedata: ("img/blm.jpg", "image/jpeg"),
-      // filedata: "@/img/blm.jpg",
-      // type: "image/jpeg"
-    },
-  }),
-    (error, response, body) => {
-      if (error) {
-        console.log("error");
-      } else if (response.body.error) {
-        console.log("response body error");
-      }
-    };
-};
 
 sendText = (recipient, messageData) => {
   console.log("SENDING TEXT");
