@@ -229,6 +229,7 @@ app.post("/webhook", (req, res) => {
                       "No worries! It would still be a huge help if you could connect me with your friends. Here's my page (https://www.facebook.com/BLMtest) and contact info (m.me/BLMtest)",
                   }
                 );
+                break;
               }
               case "getInvolved": {
                 sendText(
