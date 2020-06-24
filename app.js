@@ -62,13 +62,13 @@ let getInvolvedQuickReplies = [
   },
   {
     content_type: "text",
-    title: "Support local businesses",
+    title: "Support local biz",
     payload: "support",
     image_url: "https://img.icons8.com/doodle/48/000000/dining-room.png",
   },
   {
     content_type: "text",
-    title: "Peacefully protest",
+    title: "Protest",
     payload: "protest",
     image_url: "https://img.icons8.com/dusk/64/000000/strike.png",
   },
@@ -159,9 +159,22 @@ app.post("/webhook", (req, res) => {
       if ("messaging" in entry) {
         if (
           entry.messaging[0].message &&
-          ["Hello!", "Hi", "Here", "Hello", "Hello?", "hi", "hello"].includes(
-            entry.messaging[0].message.text
-          )
+          [
+            "Hello!",
+            "hello!",
+            "Hi",
+            "hi",
+            "Here",
+            "here",
+            "Hello",
+            "hello",
+            "Hello?",
+            "hello?",
+            "Hey!",
+            "hey!",
+            "Hey",
+            "hey",
+          ].includes(entry.messaging[0].message.text)
         ) {
           let sender = entry.messaging[0].sender.id;
           sendText(
@@ -170,6 +183,25 @@ app.post("/webhook", (req, res) => {
               text:
                 "Thanks for reaching out to me! Are you interested in supporting the BLM movement in your local area?",
               quick_replies: joinQuickReplies,
+            }
+          );
+        }
+
+        if (
+          entry.messaging[0].message &&
+          entry.messaging[0].message.text.length == 5 &&
+          entry.messaging[0].message &&
+          Math.floor(Number(entry.messaging[0].message.text)) !== Infinity &&
+          String(Math.floor(Number(entry.messaging[0].message.text))) === str &&
+          Math.floor(Number(entry.messaging[0].message.text)) >= 0
+        ) {
+          let sender = entry.messaging[0].sender.id;
+          sendText(
+            { id: sender },
+            {
+              text:
+                "Thanks for the zipcode! What would you like to do in your area?",
+              quick_replies: actQuickReplies,
             }
           );
         }
@@ -186,8 +218,8 @@ app.post("/webhook", (req, res) => {
                 sendText(
                   { id: sender },
                   {
-                    text: "Great! What would you like to do?",
-                    quick_replies: actQuickReplies,
+                    text:
+                      "Great! Can you send me your 5-digit US zipcode please?",
                   }
                 );
                 break;
