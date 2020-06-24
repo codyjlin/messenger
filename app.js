@@ -162,6 +162,7 @@ app.post("/webhook", (req, res) => {
           entry.messaging[0].message &&
           entry.messaging[0].message.text == "test"
         ) {
+          let sender = entry.messaging[0].sender.id;
           sendText(
             { id: sender },
             { text: "you clicked get involved", quick_replies: actQuickReplies }
@@ -169,7 +170,7 @@ app.post("/webhook", (req, res) => {
         }
 
         for (let i = 0; i < entry.messaging.length; i++) {
-          let event = entry.messaging;
+          let event = entry.messaging[i];
           let sender = event.sender.id;
 
           if (event.message.quick_reply) {
