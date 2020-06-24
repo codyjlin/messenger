@@ -143,9 +143,9 @@ app.post("/webhook", (req, res) => {
       // askForZipcode(sender);
 
       // Ask if interested
-      sendText(sender, "Are you interested in supporting the BLM movement in your local area?");
+      // sendText(sender, "Are you interested in supporting the BLM movement in your local area?");
       sendText(sender, {
-        text: "Echo of: " + text.substring(0, 100),
+        text: "Are you interested in supporting the BLM movement in your local area?",
         quick_replies: interestQuickReplies,
       });
 
