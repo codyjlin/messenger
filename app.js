@@ -53,7 +53,6 @@ let actQuickReplies = [
     image_url: "https://img.icons8.com/doodle/48/000000/plus--v1.png",
   },
 ];
-
 let getInvolvedQuickReplies = [
   {
     content_type: "text",
@@ -136,7 +135,7 @@ app.post("/webhook", (req, res) => {
               { post_id: change.post_id },
               {
                 text:
-                  "Are you interested in supporting the BLM movement in your local area?",
+                  "Thanks for reaching out to me! Are you interested in supporting the BLM movement in your local area?",
                 quick_replies: joinQuickReplies,
               }
             );
@@ -146,7 +145,7 @@ app.post("/webhook", (req, res) => {
               { comment_id: change.comment_id },
               {
                 text:
-                  "Are you interested in supporting the BLM movement in your local area?",
+                  "Thanks for reaching out to me! Are you interested in supporting the BLM movement in your local area?",
                 quick_replies: joinQuickReplies,
               }
             );
@@ -160,12 +159,18 @@ app.post("/webhook", (req, res) => {
       if ("messaging" in entry) {
         if (
           entry.messaging[0].message &&
-          entry.messaging[0].message.text == "test"
+          ["Hello!", "Hi", "Here", "Hello", "Hello?", "hi", "hello"].includes(
+            entry.messaging[0].message.text
+          )
         ) {
           let sender = entry.messaging[0].sender.id;
           sendText(
             { id: sender },
-            { text: "you clicked get involved", quick_replies: actQuickReplies }
+            {
+              text:
+                "Thanks for reaching out to me! Are you interested in supporting the BLM movement in your local area?",
+              quick_replies: joinQuickReplies,
+            }
           );
         }
 
@@ -177,28 +182,96 @@ app.post("/webhook", (req, res) => {
             let quickReply = event.message.quick_reply.payload;
 
             switch (quickReply) {
+              case "yes": {
+                sendText(
+                  { id: sender },
+                  {
+                    text: "Great! What would you like to do?",
+                    quick_replies: actQuickReplies,
+                  }
+                );
+                break;
+              }
+              case "no": {
+                let oppquickReplyMillisecondsToWait = millisecondsToWait + 30;
+                sendText(
+                  { id: sender },
+                  {
+                    text:
+                      "No worries! It would still be a huge help if you could connect me with your friends. Here's my page (https://www.facebook.com/BLMtest) and contact info (m.me/BLMtest)",
+                  }
+                );
+                break;
+              }
               case "getInvolved": {
-                let quickReplyMillisecondsToWait = millisecondsToWait + 30;
-                setTimeout(() => {
-                  // Whatever you want to do after the wait
-                  sendText(
-                    { id: sender },
-                    { text: "you clicked get involved" }
-                  );
-                }, quickReplyMillisecondsToWait);
-
+                sendText(
+                  { id: sender },
+                  {
+                    text:
+                      "You rock! Here are some ways you can make a difference:",
+                    quick_replies: getInvolvedQuickReplies,
+                  }
+                );
                 break;
               }
               case "addOpportunity": {
-                let oppquickReplyMillisecondsToWait = millisecondsToWait + 30;
-                setTimeout(() => {
-                  // Whatever you want to do after the wait
-                  sendText(
-                    { id: sender },
-                    { text: "you clicked add opportunity" }
-                  );
-                }, oppquickReplyMillisecondsToWait);
-
+                sendText(
+                  { id: sender },
+                  {
+                    text:
+                      "That's awesome! Please give us the details in an email to username@email.com",
+                  }
+                );
+                break;
+              }
+              case "donate": {
+                sendText(
+                  { id: sender },
+                  {
+                    text:
+                      "Great choice! You can donate directly to the movement at https://www.gofundme.com/f/blmla",
+                  }
+                );
+                break;
+              }
+              case "support": {
+                sendText(
+                  { id: sender },
+                  {
+                    text:
+                      "Great choice! Here's a thorough list of the nearby businesses you can directly support: https://www.latimes.com/lifestyle/story/2020-06-03/black-owned-businesses-in-los-angeles",
+                  }
+                );
+                break;
+              }
+              case "protest": {
+                sendText(
+                  { id: sender },
+                  {
+                    text:
+                      "Great choice! There are a lot of options near you - you can keep up to date at this page:  https://www.facebook.com/MarchAndRallyLA/",
+                  }
+                );
+                break;
+              }
+              case "email": {
+                sendText(
+                  { id: sender },
+                  {
+                    text:
+                      "Great choice! You can share your opinions with Gilbert Cedillo, an LA Council Member at gilbert.cedillo@lacity.org",
+                  }
+                );
+                break;
+              }
+              case "share": {
+                sendText(
+                  { id: sender },
+                  {
+                    text:
+                      "It would still be a great help if you could connect me with your friends. Here's my page (https://www.facebook.com/BLMtest) and contact info (m.me/BLMtest)",
+                  }
+                );
                 break;
               }
             }
